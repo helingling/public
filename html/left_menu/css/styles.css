@@ -1,0 +1,57 @@
+body {
+	background-color: #F6F7FB;
+	color: #333333;
+	width: 60%;
+	margin-left: 35%;
+	padding: 0px;
+	font-family: Helvetica Neue;
+	line-height: 24.5px;
+	font-size: 14px;
+}
+
+/* 目录样式 */
+.content {
+	height: 100%;
+	width: 30%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #fff;
+	padding-top: 20px;
+	font-family: Helvetica Neue;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 0 auto;
+}
+
+h1,
+h2,
+h3 {
+	color: #000000;
+}
+
+ul {
+	padding-left: 0;
+	list-style-type: none;
+}
+
+li a {
+	color: #3E71F6;
+	font-size: 14px;		/* 设置字体大小 */
+}
+
+li a:hover {
+	/*text-decoration: underline;*/		/* 不显示下划线*/
+	text-decoration: none;
+	color: #C92C2C;
+}
+
+img {
+	margin: 0 auto;
+	padding: 10px;
+	display: block;
+	object-fit: cover;		/* 确保图像覆盖容器而不变形 */
+	border-radius: 15px;	/* 设置角半径以制作圆角 */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);	/* 添加阴影效果 */
+	transition: transform 0.3s ease-in-out;		/* 可选：添加悬停效果 */
+}
