@@ -9,6 +9,7 @@ body {
 	font-size: 14px;
 }
 
+/* 代码块样式 */
 code {
 	color: #128B4E;
 	background-color: rgb(231, 243, 237);
@@ -42,7 +43,9 @@ code {
 
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5 {
 	color: #000000;
 }
 
@@ -54,11 +57,12 @@ ul {
 li a {
 	color: #3E71F6;
 	font-size: 14px;		/* 设置字体大小 */
+	/*text-decoration: underline line-through;*/		/* 显示下划线、删除线*/
+	text-decoration: none;		/* 不显示下划线*/
 }
 
 li a:hover {
-	/*text-decoration: underline;*/		/* 不显示下划线*/
-	text-decoration: none;
+	text-decoration: none;		/* 不显示下划线*/
 	color: #C92C2C;
 }
 
