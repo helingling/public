@@ -43,7 +43,7 @@
 			#circle {
 				position: relative;
 				width: 500px;
-				height: 500px;
+				padding-bottom: 500px;
 				border-radius: 50%;
 				background-color: rgba(255, 255, 255, 0.1);
 				overflow: hidden;
@@ -123,13 +123,18 @@
 					background-position: center;
 				}
 			}
-			
+
 			/* 针对移动设备的样式 */
-			@media (max-width: 768px) { /* 这里假设768px是平板和手机的最大宽度 */
-			    #circle {
-			        width: 50%; /* 移动设备上的宽度 */
-			        padding-bottom: 50%; /* 保持宽高比为1:1 */
-			    }
+			@media (max-width: 1000px) {
+
+				/* 这里假设768px是平板和手机的最大宽度 */
+				#circle {
+					width: 80%;
+					/* 更大屏幕上的宽度 */
+					padding-bottom: 80%;
+					/* 保持宽高比为1:1 */
+				}
+
 				.name {
 					font-size: 50px;
 				}
