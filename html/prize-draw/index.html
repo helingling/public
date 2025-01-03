@@ -6,7 +6,6 @@
 		<style>
 			body {
 				height: 100vh;
-				/* background-color: #000; */
 				margin: 0;
 
 				display: grid;
@@ -43,8 +42,8 @@
 
 			#circle {
 				position: relative;
-				width: 400px;
-				height: 400px;
+				width: 500px;
+				height: 500px;
 				border-radius: 50%;
 				background-color: rgba(255, 255, 255, 0.1);
 				overflow: hidden;
@@ -54,17 +53,16 @@
 				position: absolute;
 				color: transparent;
 				/* 默认透明 */
-				font-size: 14px;
+				font-size: 25px;
 				font-weight: bold;
 				pointer-events: none;
 				transition: color 0.5s;
 			}
 
 			#myTitle {
-				color: white;
-				/* background-color: aqua; */
+				color: darkgoldenrod;
 				text-align: center;
-				font-size: 30px;
+				font-size: 60px;
 			}
 
 			#drawResults {
@@ -95,9 +93,11 @@
 			}
 
 			#startBtn {
-				color: white;
+				color: darkgoldenrod;
 				background-color: rgba(0, 0, 0, 0);
-				border-color: white;
+				border-color: rgba(0, 0, 0, 0);
+				padding: 30px;
+				font-size: 40px;
 			}
 
 			@keyframes rainbow {
@@ -121,6 +121,17 @@
 
 				100% {
 					background-position: center;
+				}
+			}
+			
+			/* 针对移动设备的样式 */
+			@media (max-width: 768px) { /* 这里假设768px是平板和手机的最大宽度 */
+			    #circle {
+			        width: 50%; /* 移动设备上的宽度 */
+			        padding-bottom: 50%; /* 保持宽高比为1:1 */
+			    }
+				.name {
+					font-size: 50px;
 				}
 			}
 		</style>
