@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8">
+		<title>Random Name Light Up</title>
+		<style>
+			body {
+				height: 100vh;
+				/* background-color: #000; */
+				margin: 0;
+
+				display: grid;
+				place-items: center;
+				/* 水平和垂直居中 */
+			}
+
+			button {
+				font-size: 20px;
+			}
+
+			#caihong {
+				background: radial-gradient(circle,
+						rgba(255, 0, 0, 0.5),
+						/* 红色，70% 不透明 */
+						rgba(255, 165, 0, 0.6),
+						/* 橙色，60% 不透明 */
+						rgba(255, 255, 0, 0.5),
+						/* 黄色，50% 不透明 */
+						rgba(0, 128, 0, 0.4),
+						/* 绿色，40% 不透明 */
+						rgba(0, 0, 255, 0.3),
+						/* 蓝色，30% 不透明 */
+						rgba(75, 0, 130, 0.2),
+						/* 蓝紫色，20% 不透明 */
+						rgba(238, 130, 238, 0.1)
+						/* 紫色，10% 不透明 */
+					);
+				background-size: 200% 200%;
+				/* 增加渐变的大小以增强效果 */
+				animation: rainbowExpand 10s ease infinite;
+				/* 添加动画 */
+			}
+
+			#circle {
+				position: relative;
+				width: 400px;
+				height: 400px;
+				border-radius: 50%;
+				background-color: rgba(255, 255, 255, 0.1);
+				overflow: hidden;
+			}
+
+			.name {
+				position: absolute;
+				color: transparent;
+				/* 默认透明 */
+				font-size: 14px;
+				font-weight: bold;
+				pointer-events: none;
+				transition: color 0.5s;
+			}
+
+			#myTitle {
+				color: white;
+				/* background-color: aqua; */
+				text-align: center;
+				font-size: 30px;
+			}
+
+			#drawResults {
+				color: white;
+				display: none;
+
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.8);
+				/* 调整背景颜色透明度以适应视觉需求 */
+				z-index: 1000;
+				/* 确保它位于其他内容之上 */
+
+				display: grid;
+				place-items: center;
+				/* 水平和垂直居中 */
+			}
+
+			#drawResultsContent {
+				max-width: 50%;
+				max-height: 50%;
+
+				background-color: rgba(0, 0, 0, 0.5);
+				padding: 5%;
+				border-radius: 5px;
+				text-align: center;
+			}
+
+			#startBtn {
+				color: white;
+				background-color: rgba(0, 0, 0, 0);
+				border-color: white;
+			}
+
+			@keyframes rainbow {
+				0% {
+					background-position: 50% 50%;
+				}
+
+				50% {
+					background-position: 100% 100%;
+				}
+
+				100% {
+					background-position: 50% 50%;
+				}
+			}
+
+			@keyframes rainbowExpand {
+				0% {
+					background-position: center;
+				}
+
+				100% {
+					background-position: center;
+				}
+			}
+		</style>
+	</head>
+	<body id="caihong">
+		<div id="myTitle"></div>
+		<!-- <div style="height: 0px;"></div> -->
+		<div id="circle"></div>
+		<div id="drawResults">
+			<div id="drawResultsContent">
+				<div id="drawResults-title" style="font-size: 30px;"></div>
+				<br />
+				<div id="drawResults-names" style="font-size: 20px;"></div>
+				<br />
+				<div id="drawResults-jiangpin" style="font-size: 20px;"></div>
+				<br />
+				<br />
+				<button onclick="hiddenResult()">退出</button>
+			</div>
+		</div>
+		<button id="startBtn" onclick="startDraw()">开始抽奖</button>
+
+		<script>
+			const shuLiang = [10, 5, 2, 1];
+			const mingCheng = ["三等奖", "二等奖", "一等奖", "特等奖"];
+			const jiangPin = ["100元小米耳机", "iPhone 16", "华为 x6 手机", "iMac Pro + 华为 x6 手机"];
+			var zhongJiangNames = [
+				[],
+				[],
+				[],
+				[]
+			];
+			var index = 0;
+
+			var names = [
+				"李华", "王伟", "张敏", "陈静", "赵强", "刘洋", "孙丽", "周勇", "吴芳", "郑杰",
+				"黄磊", "徐霞", "朱军", "何梅", "胡斌", "郭静", "林峰", "罗燕", "高翔", "梁平",
+				"陈涛", "李娜", "王刚", "张丽", "赵明", "刘红", "孙兵", "周莉", "吴涛", "郑丽",
+				"黄艳", "徐强", "朱敏", "何勇", "胡霞", "郭涛", "林丽", "罗兵", "高霞", "梁勇",
+				"陈敏", "李峰", "王霞", "张兵", "赵丽", "王铭俊", "李文博", "陈思远", "赵雅琪", "张子涵",
+				"刘若曦", "孙嘉诚", "周泽楷", "吴浩然", "郑欣怡",
+				"黄启超", "徐婉婷", "朱子淳", "何明轩", "胡静雅",
+				"郭子淳", "林霖若兮", "罗一诺", "高宇辰", "梁诗雅",
+				"陈睿宁", "李承言", "王梓豪", "张艺馨", "刘书羽",
+				"孙逸飞", "周晓萱", "吴锦程", "郑雪莹", "黄靖舒",
+				"徐若彤", "朱韵竹", "何佳音", "胡景云", "郭子涵",
+				"林清扬", "罗致远", "高卓凡", "梁晨曦", "陈子淳",
+				"李明轩", "王诗雅", "张皓轩", "刘芷晴", "孙泽昊",
+				"周梦琪", "吴浩淼", "郑雨涵", "黄启明", "徐婉清"
+			];
+
+			var intervalId;
+			let circle = document.getElementById('circle');
+			let litNames = [];
+
+			// 隐藏结果视图
+			hiddenResult();
+			// 初始化标题
+			document.getElementById('myTitle').innerHTML = mingCheng[index];
+
+			// 初始化所有姓名DIV及其位置
+			function createName(name) {
+				const nameDiv = document.createElement('div');
+				nameDiv.className = 'name';
+				nameDiv.innerText = name;
+
+				// Randomize the name's position within the circle
+				let angle = Math.random() * 2 * Math.PI;
+				let radius = (Math.random() * 0.4 + 0.3) * 200; // Between 30% and 70% of the circle radius
+
+				nameDiv.style.left = `${200 + Math.cos(angle) * radius}px`;
+				nameDiv.style.top = `${200 + Math.sin(angle) * radius}px`;
+
+				return nameDiv;
+			}
+
+			// 加载所有姓名DIV
+			function populateNames() {
+				circle.innerHTML = ''; // Clear previous names
+				names.forEach(name => {
+					let nameDiv = createName(name);
+					circle.appendChild(nameDiv);
+				});
+			}
+
+			// 将HSL转换为RGB的辅助函数
+			function hslToRgb(h, s, l) {
+				s /= 100;
+				l /= 100;
+
+				const k = n => (n + h / 30) % 12;
+				const a = s * Math.min(l, 1 - l);
+				const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
+				return {
+					r: Math.round(f(0) * 255),
+					g: Math.round(f(8) * 255),
+					b: Math.round(f(4) * 255)
+				};
+			}
+
+			// 点亮名字
+			function lightUpNames() {
+				if (litNames.length > 0) {
+					litNames.forEach(nameDiv => {
+						nameDiv.style.color = 'transparent'; // Turn off previously lit names
+					});
+					litNames = [];
+				}
+
+				let count = shuLiang[index];
+				for (let i = 0; i < count; i++) {
+					let randomIndex = Math.floor(Math.random() * names.length);
+					let nameDiv = circle.children[randomIndex];
+					while (litNames.includes(nameDiv)) {
+						randomIndex = Math.floor(Math.random() * names.length);
+						nameDiv = circle.children[randomIndex];
+					}
+					litNames.push(nameDiv);
+
+					// 设置文字颜色
+					//nameDiv.style.color = 'white'; // Light up new names
+
+					// 设置随机彩虹颜色
+					let angle = Math.random() * 2 * Math.PI;
+					let hue = (angle / (2 * Math.PI)) * 360; // Convert angle to hue [0, 360]
+					let rgb = hslToRgb(hue, 100, 50); // Use full saturation and lightness for vibrant colors
+					nameDiv.style.color = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+				}
+			}
+
+			// 开始抽奖
+			function startDraw() {
+				if (intervalId) {
+					return;
+				}
+
+				// 隐藏 drawResults div
+				hiddenResult();
+
+				// 初始化所有姓名DIV及其位置
+				populateNames();
+
+				intervalId = setInterval(() => {
+					lightUpNames();
+				}, 100); //0.1秒
+
+				setTimeout(() => {
+					clearInterval(intervalId); // 清空定时器
+					intervalId = null;
+
+					showFinalWinners(); // 显示中奖结果
+				}, 10000); // 10 seconds
+			}
+
+			// 显示中奖结果
+			function showFinalWinners() {
+				// 显示到页面中
+				var nameStrArr = [];
+				litNames.forEach(nameDiv => {
+					let result = document.createElement('div');
+					let name = nameDiv.innerText;
+					// result.innerText = `Winner: ${nameDiv.innerText}`;
+					// resultsDiv.appendChild(result);
+
+					nameDiv.style.color = 'transparent'; // 设置透明，不显示
+
+					// 使用 push 方法将名字添加到数组中
+					nameStrArr.push(name);
+				});
+				let namesStr = nameStrArr.join(" ");
+				let jiangpinStr = "恭喜以上同学，获得奖品：" + jiangPin[index];
+				let titleStr = mingCheng[index] + "获得者";
+				document.getElementById('drawResults-names').innerHTML = namesStr;
+				document.getElementById('drawResults-jiangpin').innerHTML = jiangpinStr;
+				document.getElementById('drawResults-title').innerHTML = titleStr;
+
+				// 显示 drawResults div
+				document.getElementById('drawResults').style.display = 'block'; // 或者 'inline-block' 等，取决于原始样式
+
+				// 保存数据到数组
+				zhongJiangNames[index] = nameStrArr;
+
+				// 索引+1 或者 恢复初始化
+				if ((index != 0) && (index == mingCheng.length - 1)) {
+					// 初始化索引
+					index = 0;
+					// 初始化数组
+					for (var i = 0; i < mingCheng.length; i++) {
+						zhongJiangNames[i] = [];
+					}
+					// 初始化标题
+					document.getElementById('myTitle').innerHTML = mingCheng[index];
+					// 移除已获奖名单
+					names.filter(nameStrArr);
+				} else {
+					index = index + 1;
+					// 初始化标题
+					document.getElementById('myTitle').innerHTML = mingCheng[index];
+				}
+			}
+
+			function hiddenResult() {
+				document.getElementById('drawResults').style.display = 'none'; // 或者 'inline-block' 等，取决于原始样式
+			}
+		</script>
+
+	</body>
+</html>
