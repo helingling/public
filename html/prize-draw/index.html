@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 	<head>
 		<meta charset="UTF-8">
-		<title>Random Name Light Up</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<title>抽奖系统</title>
 		<style>
 			body {
 				height: 100vh;
@@ -67,13 +68,10 @@
 
 			#drawResults {
 				color: white;
-				display: none;
 
 				position: fixed;
 				width: 100%;
-				height: 100%;
-				background-color: rgba(0, 0, 0, 0.8);
-				/* 调整背景颜色透明度以适应视觉需求 */
+				background-color: transparent;
 				z-index: 1000;
 				/* 确保它位于其他内容之上 */
 
@@ -83,13 +81,19 @@
 			}
 
 			#drawResultsContent {
-				max-width: 50%;
-				max-height: 50%;
-
 				background-color: rgba(0, 0, 0, 0.5);
 				padding: 5%;
 				border-radius: 5px;
 				text-align: center;
+				/* 设置最大宽度和高度 */
+				max-width: 50%;
+				/* 或者一个具体的像素值 */
+				max-height: 80%;
+				/* 或者一个具体的像素值 */
+				height: fit-content;
+				/* 根据内容调整高度 */
+				box-sizing: border-box;
+				/* 包含padding和border在设定的宽度和高度内 */
 			}
 
 			#startBtn {
@@ -134,9 +138,12 @@
 					padding-bottom: 80%;
 					/* 保持宽高比为1:1 */
 				}
-
+				#drawResultsContent {
+					/* 设置最大宽度和高度 */
+					max-width: 80%;
+				}
 				.name {
-					font-size: 50px;
+					font-size: 20px;
 				}
 			}
 		</style>
@@ -192,6 +199,10 @@
 			let circle = document.getElementById('circle');
 			let litNames = [];
 
+			let computedStyle = window.getComputedStyle(circle);
+			let width = computedStyle.getPropertyValue('width'); // 获取宽度值，包含单位
+			let widthValue = parseInt(computedStyle.getPropertyValue('width'), 10); // 获取宽度值，只包含数值部分
+
 			// 隐藏结果视图
 			hiddenResult();
 			// 初始化标题
@@ -203,12 +214,31 @@
 				nameDiv.className = 'name';
 				nameDiv.innerText = name;
 
-				// Randomize the name's position within the circle
-				let angle = Math.random() * 2 * Math.PI;
-				let radius = (Math.random() * 0.4 + 0.3) * 200; // Between 30% and 70% of the circle radius
+				// 获取 circle 的实际宽度和高度
+				let circleRadius = circle.offsetWidth / 2;
+				let circleCenterX = circleRadius;
+				let circleCenterY = circleRadius;
 
-				nameDiv.style.left = `${200 + Math.cos(angle) * radius}px`;
-				nameDiv.style.top = `${200 + Math.sin(angle) * radius}px`;
+				// 创建一个临时 div 来测量文本尺寸
+				let tempDiv = document.createElement('div');
+				tempDiv.className = 'name'; // 确保应用相同的样式
+				tempDiv.innerText = name;
+				tempDiv.style.visibility = 'hidden'; // 隐藏以避免影响布局
+				document.body.appendChild(tempDiv);
+				let nameWidth = tempDiv.offsetWidth;
+				let nameHeight = tempDiv.offsetHeight;
+				document.body.removeChild(tempDiv); // 移除临时 div
+
+				// Randomize the name's position within the circle, ensuring it does not exceed the circle bounds
+				let angle = Math.random() * 2 * Math.PI;
+				let maxRadius = circleRadius - Math.sqrt((nameWidth / 2) ** 2 + (nameHeight / 2) **
+				2); // Subtract half of the diagonal length of nameDiv from circle radius
+				let radius = Math.random() * maxRadius;
+
+				// 设置名字的初始位置，并调整位置使其居中
+				nameDiv.style.position = 'absolute';
+				nameDiv.style.left = `${circleCenterX + Math.cos(angle) * radius - nameWidth / 2}px`;
+				nameDiv.style.top = `${circleCenterY + Math.sin(angle) * radius - nameHeight / 2}px`;
 
 				return nameDiv;
 			}
@@ -257,9 +287,6 @@
 					}
 					litNames.push(nameDiv);
 
-					// 设置文字颜色
-					//nameDiv.style.color = 'white'; // Light up new names
-
 					// 设置随机彩虹颜色
 					let angle = Math.random() * 2 * Math.PI;
 					let hue = (angle / (2 * Math.PI)) * 360; // Convert angle to hue [0, 360]
@@ -299,8 +326,6 @@
 				litNames.forEach(nameDiv => {
 					let result = document.createElement('div');
 					let name = nameDiv.innerText;
-					// result.innerText = `Winner: ${nameDiv.innerText}`;
-					// resultsDiv.appendChild(result);
 
 					nameDiv.style.color = 'transparent'; // 设置透明，不显示
 
@@ -308,8 +333,8 @@
 					nameStrArr.push(name);
 				});
 				let namesStr = nameStrArr.join(" ");
-				let jiangpinStr = "恭喜以上同学，获得奖品：" + jiangPin[index];
-				let titleStr = mingCheng[index] + "获得者";
+				let jiangpinStr = `恭喜以上同学，获得奖品：<br>${jiangPin[index]}`;
+				let titleStr = `${mingCheng[index]}获得者`;
 				document.getElementById('drawResults-names').innerHTML = namesStr;
 				document.getElementById('drawResults-jiangpin').innerHTML = jiangpinStr;
 				document.getElementById('drawResults-title').innerHTML = titleStr;
@@ -328,18 +353,17 @@
 					for (var i = 0; i < mingCheng.length; i++) {
 						zhongJiangNames[i] = [];
 					}
-					// 初始化标题
-					document.getElementById('myTitle').innerHTML = mingCheng[index];
 					// 移除已获奖名单
 					names.filter(nameStrArr);
 				} else {
 					index = index + 1;
-					// 初始化标题
-					document.getElementById('myTitle').innerHTML = mingCheng[index];
 				}
 			}
 
 			function hiddenResult() {
+				// 初始化标题
+				document.getElementById('myTitle').innerHTML = mingCheng[index];
+				// 初始化结果
 				document.getElementById('drawResults').style.display = 'none'; // 或者 'inline-block' 等，取决于原始样式
 			}
 		</script>
