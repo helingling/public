@@ -70,7 +70,7 @@
 				color: white;
 
 				position: fixed;
-				width: 100%;
+				/* width: 100%; */
 				background-color: transparent;
 				z-index: 1000;
 				/* 确保它位于其他内容之上 */
@@ -138,10 +138,12 @@
 					padding-bottom: 80%;
 					/* 保持宽高比为1:1 */
 				}
+
 				#drawResultsContent {
 					/* 设置最大宽度和高度 */
 					max-width: 80%;
 				}
+
 				.name {
 					font-size: 20px;
 				}
@@ -232,7 +234,7 @@
 				// Randomize the name's position within the circle, ensuring it does not exceed the circle bounds
 				let angle = Math.random() * 2 * Math.PI;
 				let maxRadius = circleRadius - Math.sqrt((nameWidth / 2) ** 2 + (nameHeight / 2) **
-				2); // Subtract half of the diagonal length of nameDiv from circle radius
+					2); // Subtract half of the diagonal length of nameDiv from circle radius
 				let radius = Math.random() * maxRadius;
 
 				// 设置名字的初始位置，并调整位置使其居中
