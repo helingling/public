@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		var id = "title" + index;
 		header.setAttribute("id", id);
 		// 为标题加上标号,如果不希望显示标号，把下面这行注释就可以了
-		//header.textContent = index + " " + header.textContent;
-		header.textContent = header.textContent;
+		header.textContent = index + " " + header.textContent;
+		//header.textContent = header.textContent;
 
 		let suojin = "padding-left: " + (20 * level) + "px";
 		var li = document.createElement("li");
