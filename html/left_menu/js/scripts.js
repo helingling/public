@@ -1,46 +1,46 @@
 document.addEventListener("DOMContentLoaded", function() {
-	// 创建目录列表
-	var toc = document.createElement("ul");
-	toc.setAttribute("id", "table-of-content");
-	toc.setAttribute("class", "content");
-	document.body.insertBefore(toc, document.body.childNodes[0]);
-	// 用于计算当前标题层级的栈,先进先出,从左到右每一个元素代表当前标题所在的层级索引，初始为空
-	var stack = new Array();
-	// 获取所有标题
-	var headers = document.querySelectorAll('h1,h2,h3,h4,h5,h6');
-	for (var i = 0; i < headers.length; i++) {
-		var header = headers[i];
-		// 计算标题级数，为后面计算标号及缩进空格准备
-		var level = parseInt(header.tagName.replace('H', ''), 10);
-		// 通过两个where循环对栈进行调整,确保stack中标题级数与当前标题级数相同
-		while (stack.length < level) {
-			stack.push(0);
-		}
-		while (stack.length > level) {
-			stack.pop();
-		}
-		// 最小一级标题标号步进+1
-		stack[stack.length - 1]++;
-		// 生成标题标号( 1.1,1.2.. )
-		var index = stack.join(".")
-		// 生成标题ID
-		var id = "title" + index;
-		header.setAttribute("id", id);
-		// 为标题加上标号,如果不希望显示标号，把下面这行注释就可以了
-		header.textContent = index + " " + header.textContent;
-		//header.textContent = header.textContent;
+  // 创建目录容器
+  const toc = document.createElement('nav');
+  toc.id = 'table-of-content';
+  
+  // 创建右侧内容容器
+  const mainContent = document.createElement('main');
+  mainContent.className = 'content-main';
 
-		let suojin = "padding-left: " + (20 * level) + "px";
-		var li = document.createElement("li");
-		li.style.cssText = suojin; // 设置缩进
-		toc.appendChild(li);
+  // 移动所有现有内容到右侧容器
+  while(document.body.firstChild) {
+    mainContent.appendChild(document.body.firstChild);
+  }
 
-		var a = document.createElement("a");
-		// 为目录项设置链接
-		a.setAttribute("href", "#" + id)
-		// 目录项文本前面放置缩进空格
-		a.innerHTML = new Array(level * 4).join('&nbsp;') + header.textContent;
-		a.innerHTML = header.textContent;
-		toc.lastChild.appendChild(a);
-	}
+  // 重构页面结构
+  document.body.append(toc, mainContent);
+
+  // 生成目录逻辑
+  let stack = [];
+  const headers = mainContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  
+  headers.forEach(header => {
+    const level = parseInt(header.tagName.slice(1));
+    
+    // 维护层级栈
+    while(stack.length < level) stack.push(0);
+    while(stack.length > level) stack.pop();
+    stack[stack.length-1]++;
+    
+	
+    const index = stack.join('.');
+	let dd = `${index}&nbsp;${header.innerHTML}`
+    header.id = `heading-${index}`;
+    header.innerHTML = `<span style="display: inline-block; min-width: 40px;">${index}</span>${header.innerHTML}`;// 右侧内容显示
+
+    // 创建目录项
+    const li = document.createElement('li');
+    const anchor = document.createElement('a');
+    anchor.href = `#${header.id}`;
+    //anchor.innerHTML = `${new Array(level).join('&nbsp;&nbsp;')}${index} ${header.textContent}`;
+	anchor.innerHTML = `${new Array(level).join('&nbsp;&nbsp;&nbsp;&nbsp;')}${dd}`;// 左侧内容显示
+    
+    li.appendChild(anchor);
+    toc.appendChild(li);
+  });
 });
