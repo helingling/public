@@ -27,20 +27,39 @@ document.addEventListener("DOMContentLoaded", function() {
     while(stack.length > level) stack.pop();
     stack[stack.length-1]++;
     
-	
     const index = stack.join('.');
-	let dd = `${index}&nbsp;${header.innerHTML}`
+    const headerText = header.innerHTML;
     header.id = `heading-${index}`;
-    header.innerHTML = `<span style="display: inline-block; min-width: 40px;">${index}</span>${header.innerHTML}`;// 右侧内容显示
-
+    
+    // 创建带编号的标题内容
+    const numberSpan = document.createElement('span');
+    numberSpan.textContent = index;
+    numberSpan.style.minWidth = '40px';
+    numberSpan.style.display = 'inline-block';
+    
+    header.innerHTML = '';
+    header.appendChild(numberSpan);
+    header.appendChild(document.createTextNode(' ' + headerText));
+    
     // 创建目录项
     const li = document.createElement('li');
     const anchor = document.createElement('a');
     anchor.href = `#${header.id}`;
-    //anchor.innerHTML = `${new Array(level).join('&nbsp;&nbsp;')}${index} ${header.textContent}`;
-	anchor.innerHTML = `${new Array(level).join('&nbsp;&nbsp;&nbsp;&nbsp;')}${dd}`;// 左侧内容显示
     
+    // 创建目录中的编号和文本
+    const tocNumber = document.createElement('span');
+    tocNumber.textContent = index;
+    tocNumber.style.marginRight = '4px';
+    
+    const tocText = document.createElement('span');
+    tocText.textContent = headerText;
+    
+    anchor.appendChild(tocNumber);
+    anchor.appendChild(tocText);
     li.appendChild(anchor);
     toc.appendChild(li);
+    
+    // 根据层级设置缩进
+    anchor.style.paddingLeft = `${(level - 1) * 20}px`;
   });
 });
