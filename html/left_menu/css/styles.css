@@ -68,7 +68,7 @@ h3::before,
 h4::before,
 h5::before,
 h6::before {
-  content: attr(data-index);
+  /* content: attr(data-index); */
   color: #718096;
   margin-right: 1px;
   font-weight: 400;
