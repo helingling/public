@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function() {
     stack[stack.length-1]++;
     
     const index = stack.join('.');
-    const headerText = header.innerHTML;
     header.id = `heading-${index}`;
     
     // 创建带编号的标题内容
@@ -37,25 +36,31 @@ document.addEventListener("DOMContentLoaded", function() {
     numberSpan.style.minWidth = '40px';
     numberSpan.style.display = 'inline-block';
     
+    // 克隆原始标题内容（保留HTML标签）
+    const headerContent = document.createElement('span');
+    headerContent.innerHTML = header.innerHTML;
+    
     header.innerHTML = '';
     header.appendChild(numberSpan);
-    header.appendChild(document.createTextNode(' ' + headerText));
+    header.appendChild(document.createTextNode(' '));
+    header.appendChild(headerContent);
     
     // 创建目录项
     const li = document.createElement('li');
     const anchor = document.createElement('a');
     anchor.href = `#${header.id}`;
     
-    // 创建目录中的编号和文本
+    // 创建目录中的编号
     const tocNumber = document.createElement('span');
     tocNumber.textContent = index;
     tocNumber.style.marginRight = '4px';
     
-    const tocText = document.createElement('span');
-    tocText.textContent = headerText;
+    // 克隆原始标题内容到目录（保留HTML标签）
+    const tocContent = document.createElement('span');
+    tocContent.innerHTML = header.innerHTML.replace(numberSpan.outerHTML, '').trim();
     
     anchor.appendChild(tocNumber);
-    anchor.appendChild(tocText);
+    anchor.appendChild(tocContent);
     li.appendChild(anchor);
     toc.appendChild(li);
     
