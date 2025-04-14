@@ -61,6 +61,11 @@ body {
   transform: translateX(4px);
 }
 
+#table-of-content a strong {
+  font-weight: bold;
+  /* color: inherit; /* 或其他你想要的颜色 */ 
+}
+
 /* 标题编号样式 */
 h1::before,
 h2::before,
