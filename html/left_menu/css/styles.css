@@ -63,7 +63,7 @@ body {
 
 #table-of-content a strong {
   font-weight: bold;
-  /* color: inherit; /* 或其他你想要的颜色 */ 
+  /* color: inherit;*/ /* 或其他你想要的颜色 */ 
 }
 
 /* 标题编号样式 */
