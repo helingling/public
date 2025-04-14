@@ -2,11 +2,6 @@
 /* 全局重置 */
 html {
   overflow: hidden;
-}
-
-* {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
@@ -16,7 +11,7 @@ body {
   line-height: 1.6;
   display: flex;
   height: 100vh;
-  overflow: hidden; 
+  /* overflow: hidden; */
 }
 
 /* 左侧目录容器 */
