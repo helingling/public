@@ -11,7 +11,7 @@ body {
   line-height: 1.6;
   display: flex;
   height: 100vh;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 /* 左侧目录容器 */
@@ -35,21 +35,6 @@ body {
   width: calc(100vw - 300px);
   max-width: none;
   margin-left: 0;
-}
-
-/* 增强滚动体验 */
-::-webkit-scrollbar {
-  width: 8px;
-  background: rgba(0,0,0,0.05);
-}
-
-::-webkit-scrollbar-track {
-  background: #F7FAFC;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.2);
-  border-radius: 4px;
 }
 
 /* 目录项样式 */
@@ -95,16 +80,7 @@ code {
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'SFMono-Regular', Consolas, monospace;
-}
-
-/* pre code {
-  display: block;
-  padding: 5px;
-  overflow-x: auto;
-  background: #EDF2F7;
-  border-radius: 8px;
-  margin: 5px 0;
-} */
+}	
 
 /* 图片优化 */
 img {
